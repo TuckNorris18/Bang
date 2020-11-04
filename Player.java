@@ -25,6 +25,7 @@
  * 3 - Renegade
  * 
  */
+
 public class Player {
 	int health = 8;
 	int character;
@@ -198,16 +199,16 @@ public class Player {
 	{
 		switch(affiliation) {
 		case 0:
-			System.out.println("Sheriff");
+			System.out.print("Sheriff");
 			break;
 		case 1:
-			System.out.println("Outlaw");
+			System.out.print("Outlaw");
 			break;
 		case 2:
-			System.out.println("Deputy");
+			System.out.print("Deputy");
 			break;
 		case 3:
-			System.out.println("Renegade");
+			System.out.print("Renegade");
 			break;
 		}
 	}
