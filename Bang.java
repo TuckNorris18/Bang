@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class Bang {
@@ -29,10 +30,18 @@ public class Bang {
          
          for(int i =0; i < option; i++)
          {
-        	 Player playerTemp = new Player();
-     		 playerTemp.setPlayer(i, 1);
-        	 table.add(playerTemp);
+             
+
+              	Player playerTemp = new Player();
+               if(i==0)
+               playerTemp=pickYourCharacter(playerTemp);
+               
+               else
+           		   playerTemp.setPlayer(i, 1);
+              	table.add(playerTemp);
          }
+         
+         
          
          return table;
     }
@@ -155,6 +164,26 @@ public class Bang {
 		}
 		
 	}
+   
+   public static Player pickYourCharacter(Player player){
+      
+      
+      Scanner sc = new Scanner(System.in);
+      
+      for(int i=0;i<16;i++){
+         System.out.print("\n"+(i+1)+". ");
+         System.out.print(player.getName(i+1));
+         
+      }
+      System.out.println("\nChoose your character:");
+      
+       
+      int playerChoice = sc.nextInt();
+      
+      player.setPlayer(playerChoice, 1);
+      System.out.print(" "+player.playerName+"\n");
+      return player;
+   }
 	
 	
 	public static void main(String[] args) {
@@ -171,4 +200,4 @@ public class Bang {
 		randomizeTable(tableArray);
 	}
 
-}
+}}
