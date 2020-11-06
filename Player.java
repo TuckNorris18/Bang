@@ -114,78 +114,16 @@ public class Player {
 				break;
 			}
 	}
-   
-   public String getName(int character)
-	{
-         String name;
-			switch(character)
-			{
-			case 1:
-				name = "Bart Cassidy";
-				break;
-			case 2:
-				name = "Black Jack";
-				break;
-			case 3:
-				name = "Calamity Janet";
-				break;
-			case 4:
-				name = "El Gringo";
-				break;
-			case 5:
-				name = "Jesse Jones";
-				break;
-			case 6:
-				name = "Jourdonnais";
-				break;
-			case 7:
-				name = "Kit Carlson";
-				break;
-			case 8:
-				name = "Lucky Duke";
-				break;
-			case 9:
-				name = "Paul Regret";
-				break;
-			case 10:
-				name = "Pedro Ramirez";
-				break;
-			case 11:
-				name = "Rose Doolan";
-				break;
-			case 12:
-				name = "Sid Ketchum";
-				break;
-			case 13:
-				name = "Slab The Killer";
-				break;
-			case 14:
-				name = "Suzy Lafayette";
-				break;
-			case 15:
-				name = "Vulture Sam";
-				break;
-			case 16:
-				name = "Willy The Kid";
-				break;
-			default:
-				name = "Player";
-				break;
-			}
-         
-         return name;
-	}
-   
 	
 	public void setAffiliation(int choice)
 	{
 		affiliation = choice;
 	}
 	
-	public int shoot(Player player)
+	public int shoot()
 	{
-		player.health -= 1;
-		return player.health;
+		health -= 1;
+		return health;
 	}
 	
 	public int drinkBeer()
@@ -275,12 +213,12 @@ public class Player {
 		}
 	}
 	
-	public void handAsText(int[] hand)
+	public void handAsText()
 	{
 		System.out.print("\n{");
 		for(int i =0; i < 5; i++)
 		{
-			switch(hand[i]) {
+			switch(currentHand[i]) {
 			case 1:
 				System.out.print(" Arrow");
 				break;
