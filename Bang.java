@@ -5,17 +5,17 @@
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Collections;
 import java.util.Arrays;
-import java.util.Scanner;
 
 
 public class Bang {
 	static int players =0; //number of players
-	int arrows = 9; //Total arrows
+	static int arrows = 9; //Total arrows
 	
 	
-	 public static LinkedList<Player> makeTable(){
+	public static LinkedList<Player> makeTable(){
          
          Integer[] options = {4, 5, 6, 7, 8};
          int option = JOptionPane.showOptionDialog(null, "How many players?",null, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,null);
@@ -30,23 +30,15 @@ public class Bang {
          
          for(int i =0; i < option; i++)
          {
-             
-
-              	Player playerTemp = new Player();
-               if(i==0)
-               playerTemp=pickYourCharacter(playerTemp);
-               
-               else
-           		   playerTemp.setPlayer(i, 1);
-              	table.add(playerTemp);
+        	 Player playerTemp = new Player();
+     		 playerTemp.setPlayer(i, 1);
+        	 table.add(playerTemp);
          }
-         
-         
          
          return table;
     }
 	 
-	 public static Player[] tableArray(LinkedList<Player> table)
+	public static Player[] tableArray(LinkedList<Player> table)
 	 {
 		 Player[] tableArray = new Player[table.size()];
 		 int size = table.size();
@@ -114,9 +106,7 @@ public class Bang {
 		
 		List<Integer> posList = Arrays.asList(positions);
 		Collections.shuffle(posList);
-		posList.toArray(positions);
-		//System.out.println(Arrays.deepToString(positions));	
-		
+		posList.toArray(positions);	
 		
 		
 		for(int i =0; i < table.length; i++)
@@ -126,8 +116,7 @@ public class Bang {
 		
 		
 	}
-	
-	
+
 	public static void assignNames(Player[] table)
 	{
 		Integer[] names = new Integer[16];
@@ -164,32 +153,160 @@ public class Bang {
 		}
 		
 	}
-   
-   public static Player pickYourCharacter(Player player){
-      
-      
-      Scanner sc = new Scanner(System.in);
-      
-      for(int i=0;i<16;i++){
-         System.out.print("\n"+(i+1)+". ");
-         System.out.print(player.getName(i+1));
-         
-      }
-      System.out.println("\nChoose your character:");
-      
-       
-      int playerChoice = sc.nextInt();
-      
-      player.setPlayer(playerChoice, 1);
-      System.out.print(" "+player.playerName+"\n");
-      return player;
-   }
 	
+	public static boolean continueGame(Player[] table)
+	{
+		boolean result = false;
+		boolean SheriffWin = true;
+		boolean OutlawWin = true;
+		
+		for(int i = 0; i < table.length; i++)
+		{
+			if(table[i].affiliation == 1 || table[i].affiliation == 3)  //Check if outlaw or renegade
+			{
+				SheriffWin = false;
+			}
+			if(table[i].affiliation == 0 || table[i].affiliation == 2) //Check if sheriff or deputy
+			{
+				OutlawWin = false;
+			}
+		}
+		
+		if(SheriffWin == true)
+		{
+			System.out.println("The Law has won!\nGAME OVER");
+		}
+		if(OutlawWin == true)
+		{
+			System.out.println("The Outlaws have won!\nGAME OVER");
+		}
+		
+		result = !(SheriffWin && OutlawWin);
+		return result;
+	}
+	
+	public static int rightPlayer(Player[] table, int turn)
+	{
+		int rightPlayer;
+		
+		
+		if(turn == table.length)
+		{
+			rightPlayer = 0;
+		}else {
+			rightPlayer = turn+1;
+		}
+		
+		return rightPlayer;
+	}
+	
+	public static int leftPlayer(Player[] table, int turn)
+	{
+		int leftPlayer;
+		
+		
+		if(turn == 0)
+		{
+			leftPlayer = table.length;
+		}else {
+			leftPlayer = turn-1;
+		}
+		
+		return leftPlayer;
+	}
+	
+	
+	public static void handLogic(Dice dice, Player[] table, int turn)
+	{
+		System.out.println("It is " + table[turn].playerName + "'s turn...");
+		System.out.println("Their hand is...");
+		table[turn].currentHand = dice.makeHand();
+
+		table[turn].handAsText();
+		System.out.println("\n");
+		
+		int dynamite=0;
+		
+		Scanner scan = new Scanner(System.in);
+		
+		for(int i =0; i < 4; i++)
+		{
+			if(table[turn].currentHand[i] == 1)
+			{	
+				System.out.println("You rolled an arrow!");
+				arrows -= 1;
+				table[turn].arrows += 1;
+				if(arrows == 0)
+				{
+					for(int j = 0; i < table.length; i++)
+					{
+						table[j].health -= table[j].arrows;
+						System.out.println(table[j].playerName + " lost " + table[j].arrows + " health...");
+						table[j].arrows = 0;
+					}
+				}
+			}
+			if(table[turn].currentHand[i] ==2)
+			{
+				dynamite+=1;
+				if(dynamite ==3)
+				{
+					System.out.println("You rolled 3 dynamites! Your turn is over!");
+					return;
+				}
+			}
+			
+			if(table[turn].currentHand[i] ==3)
+			{
+				System.out.println("You rolled a one space shot...");
+				
+				if(table[turn].character == 3)
+				{
+					System.out.println("Would you like to swap your shots?\n y or n...");
+					String choice = scan.nextLine();
+					if(choice == "n")
+					{
+						System.out.println("Would you like to shoot...");
+						System.out.println("1. " + table[rightPlayer(table, turn)].playerName);
+						System.out.println("2. " + table[leftPlayer(table, turn)].playerName);
+						int option = scan.nextInt();
+						
+						
+						if(option == 1)
+						{
+							table[rightPlayer(table, turn)].shoot();
+						}
+						if(option == 2)
+						{
+							table[leftPlayer(table, turn)].shoot();
+						}
+					}
+					if(choice == "y")
+					{
+						System.out.println("Would you like to shoot...");
+						System.out.println("1. " + table[rightPlayer(table, turn)].playerName);
+						System.out.println("2. " + table[leftPlayer(table, turn)].playerName);
+						int option = scan.nextInt();
+						
+						
+						if(option == 1)
+						{
+							table[rightPlayer(table, turn)].shoot();
+						}
+						if(option == 2)
+						{
+							table[leftPlayer(table, turn)].shoot();
+						}
+					}
+					
+				}
+			}
+		}
+		
+	}
 	
 	public static void main(String[] args) {
 		Dice dice = new Dice();
-		
-		
 		
 		LinkedList<Player> table = new LinkedList<Player>();
 		table = makeTable();
@@ -198,6 +315,10 @@ public class Bang {
 		
 		
 		randomizeTable(tableArray);
+		System.out.println(continueGame(tableArray));
+		handLogic(dice, tableArray, 0);
+		handLogic(dice, tableArray, 1);
+		handLogic(dice, tableArray, 2);
 	}
 
-}}
+}
